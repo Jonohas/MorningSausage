@@ -1,0 +1,25 @@
+{
+  "name": "morningsausage",
+  "version": "0.1.0",
+  "description": "A startup application that runs tasks on startup or while the computer is running. It can also run certain tasks on shutdown",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Jonohas/MorningSausage.git"
+  },
+  "keywords": [
+    "startup",
+    "morning",
+    "sausage"
+  ],
+  "author": "Jonahas",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Jonohas/MorningSausage/issues"
+  },
+  "homepage": "https://github.com/Jonohas/MorningSausage#readme"
+}

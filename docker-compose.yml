@@ -1,0 +1,8 @@
+version: "3.5"
+services:
+  morning_sausage:
+    build: .
+    init: true
+    volumes:
+      - ./data:/app/data
+      - ./log:/app/log
