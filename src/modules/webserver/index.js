@@ -16,6 +16,7 @@ export const ModuleInstance = class extends EventEmitter {
     //required for Modules.load() using waffle manager
     async init() {
         this._server.start();
+        console.log('webserver initialized!');
         return true;
     }
 

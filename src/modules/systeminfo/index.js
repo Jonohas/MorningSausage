@@ -11,7 +11,7 @@ export const ModuleInstance = class {
     //required for Modules.load() using waffle manager
     async init() {
         console.log('systeminfo initialized!');
-        console.log(await si.battery());
+        //console.log(await si.battery());
         return true;
     }
 

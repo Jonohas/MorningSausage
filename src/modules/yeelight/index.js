@@ -25,7 +25,7 @@ export const ModuleInstance = class {
             let obj = Object.assign({}, this.default, light);
             this.lightObjects.push(new Yeelight(obj));
         }
-        this.turnOnLights();
+        //this.turnOnLights();
         return true;
     }
 
