@@ -12,12 +12,12 @@ export const ModuleInstance = class extends EventEmitter {
     }
 
     _onRequest(request) {
-        console.log(request);
-        request.res.writeHead(200, { 'Content-Type': 'text/html' }); 
+        console.log('event request');
+        //request.res.writeHead(200, { 'Content-Type': 'text/html' }); 
         
         // set response content    
-        request.res.write('<html><body><p>This is home Page.</p></body></html>');
-        request.res.end();
+        //request.res.write('<html><body><p>This is home Page.</p></body></html>');
+        //request.res.end();
     }
     //required for Modules.load() using waffle manager
     async init() {

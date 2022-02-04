@@ -8,9 +8,9 @@ export const ModuleInstance = class extends EventEmitter {
 
     constructor(config) {
         super();
-        this.config = config;
-        this._server = new WebServer(this.config.webserver);
 
+        this.config = config;
+        this._server = new WebServer(this.config.webserver, this);
     }
 
     //required for Modules.load() using waffle manager

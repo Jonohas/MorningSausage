@@ -10,9 +10,9 @@ export default class Server extends EventEmitter {
      *  port: number
      * }} config
      */
-    constructor(config) {
+    constructor(config, index) {
         super();
-
+        this.index = index;
         this._ = http.createServer();
 
         this.config = config;
@@ -35,7 +35,7 @@ export default class Server extends EventEmitter {
      * @param {Error} err HTTP Webserver error
      */
     onError(err) {
-        this.emit('error', err);
+        this.index.emit('error', err);
     }
 
     /**
@@ -45,8 +45,8 @@ export default class Server extends EventEmitter {
      */
     onRequest(req, res) {
         if (this._handlePreflight(req,res )) return;
-
-        this.emit('request', new Request(this, req, res))
+        console.log('onRequest', this, this.index);
+        this.index.emit('request', new Request(this, req, res));
     }
 
     /**
