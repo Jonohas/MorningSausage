@@ -4,7 +4,7 @@ services:
     container_name: morningsausage
     build: .
     init: true
-    restart: unless-stopped
+    restart: on-failure:3
     volumes:
       - ./data:/app/data
       - ./log:/app/log
