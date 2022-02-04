@@ -19,7 +19,6 @@ export const ModuleInstance = class {
 
     //required for Modules.load() using waffle manager
     async init() {
-        console.log('yeelight initialized!');
         for (const light of this.config.lights) {
             // assign default port to light object
             let obj = Object.assign({}, this.default, light);

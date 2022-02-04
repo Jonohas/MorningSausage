@@ -25,7 +25,7 @@
   "dependencies": {
     "http": "^0.0.1-security",
     "systeminformation": "^5.11.1",
-    "waffle-manager": "^0.1.0",
+    "waffle-manager": "^0.1.1",
     "yeelight-node": "^1.1.5"
   }
 }

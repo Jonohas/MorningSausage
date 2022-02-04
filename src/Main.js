@@ -12,11 +12,9 @@ export default class Main {
 
     start() {
         Modules.load(this.config, resolve('./src/modules'));
-        console.log('Main started!');
     }
 
     async exit() {
-        console.log('Main exited!');
         await Modules.cleanup();
 
         process.exit();
