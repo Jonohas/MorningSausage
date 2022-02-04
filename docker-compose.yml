@@ -1,6 +1,7 @@
 version: "3.5"
 services:
   morning_sausage:
+    container_name: morningsausage
     build: .
     init: true
     restart: unless-stopped
