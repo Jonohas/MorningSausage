@@ -3,17 +3,21 @@ import { EventEmitter } from 'events';
 import ImportDir from '@yimura/import-dir'
 import { resolve } from 'path'
 
-export const ModuleInfo = new ModuleBuilder('REST')    
+const name = 'REST';
+
+export const ModuleInfo = new ModuleBuilder(name)    
     .addEventListener('webserver', 'request', '_onRequest')
     .addRequired('webserver');
 
 export const ModuleInstance = class extends EventEmitter {
     _cache = new Map();
 
-    constructor(config) {
+    constructor(main) {
         super();
 
-        this.config = config;
+        this.config = main.config;
+
+        this.main = main;
     }
 
     async _onRequest(request) {
@@ -43,7 +47,7 @@ export const ModuleInstance = class extends EventEmitter {
             else
                 request.res.end("An error occured, please contact an administrator if the problem persists.");
 
-            console.log(`An error occured on "${request.url}":`, err);
+            this.log.error(name.toUpperCase(), `An error occured on "${request.url}":`, err);
         }
     }
 
@@ -52,7 +56,6 @@ export const ModuleInstance = class extends EventEmitter {
      * @param {Object} api
      */
     async _recursiveRegister(api, route = '/api') {
-        console.log(api);
         for (const bit in api) {
             if (Object.hasOwnProperty.call(api, bit)) {
                 const bits = api[bit];
@@ -78,10 +81,12 @@ export const ModuleInstance = class extends EventEmitter {
 
     //required for Modules.load() using waffle manager
     async init() {
+        this.main.log.info(name.toUpperCase(), `Starting ${name}...`);
+
         const api = ImportDir(resolve('./src/modules/REST/api/'), { recurse: true });
         await this._recursiveRegister(api);
 
-        console.log(this._cache);
+        this.main.log.verbose('REST', 'Registered all routes:', this._cache);
         return true;
     }
 

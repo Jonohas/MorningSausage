@@ -1,15 +1,19 @@
 import { ModuleBuilder } from 'waffle-manager';
 import si from 'systeminformation';
 
-export const ModuleInfo = new ModuleBuilder('systeminfo');
+const name = 'systeminfo';
+
+export const ModuleInfo = new ModuleBuilder(name);
 
 export const ModuleInstance = class {
     constructor(main) {
-
+        this.config = main.config;
+        this.log = main.log;
     }
 
     //required for Modules.load() using waffle manager
     async init() {
+        this.log.info(name.toUpperCase(), `Starting ${name}...`);
         return true;
     }
 

@@ -3,15 +3,19 @@ import { EventEmitter } from 'events';
 import { ModuleBuilder } from 'waffle-manager';
 import Request from './web/Request.js';
 
-export const ModuleInfo = new ModuleBuilder('webserver');
+
+const name = 'webserver';
+
+export const ModuleInfo = new ModuleBuilder(name);
 
 export const ModuleInstance = class extends EventEmitter {
 
-    constructor(config) {
+    constructor(main) {
         super();
 
-        this.config = config.webserver;
+        this.config = main.config.webserver;
         this._ = http.createServer();
+        this.log = main.log;
     }
 
     getHeaders(req) {
@@ -28,7 +32,8 @@ export const ModuleInstance = class extends EventEmitter {
     }
 
     _onError(err) {
-        this.emit('error', err)
+        this.emit('error', err);
+        this.log.error(name.toUpperCase(), `An error occured on "${request.url}":`, err);
     }
 
     _onListening() {
@@ -54,6 +59,7 @@ export const ModuleInstance = class extends EventEmitter {
 
     //required for Modules.load() using waffle manager
     async init() {
+        this.log.info(name.toUpperCase(), `Starting ${name}...`);
         this._.on('request', this._onRequest.bind(this));
         this._.on('error', this._onError.bind(this));
         this._.on('listening', this._onListening.bind(this));

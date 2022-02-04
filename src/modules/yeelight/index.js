@@ -1,10 +1,12 @@
 import { ModuleBuilder } from 'waffle-manager';
 import { Yeelight } from 'yeelight-node';
 
-export const ModuleInfo = new ModuleBuilder('yeelight');
+const name = 'yeelight';
+
+export const ModuleInfo = new ModuleBuilder(name);
 
 export const ModuleInstance = class {
-    constructor(config) {
+    constructor(main) {
 
         // default yeelight port
         this.default = {
@@ -14,11 +16,14 @@ export const ModuleInstance = class {
         this.lightObjects = [];
 
 
-        this.config = config.yeelight;
+        this.config = main.config.yeelight;
+        this.logger = main.log;
     }
 
     //required for Modules.load() using waffle manager
     async init() {
+        this.logger.info(name.toUpperCase(), `Starting ${name}...`);
+
         for (const light of this.config.lights) {
             // assign default port to light object
             let obj = Object.assign({}, this.default, light);
