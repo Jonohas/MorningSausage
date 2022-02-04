@@ -3,6 +3,7 @@ services:
   morning_sausage:
     build: .
     init: true
+    restart: unless-stopped
     volumes:
       - ./data:/app/data
       - ./log:/app/log
