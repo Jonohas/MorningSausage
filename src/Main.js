@@ -10,7 +10,7 @@ export default class Main {
 
         this.config = loadJson('/data/config.json'); // Path based on root of project
         this.auth = loadJson('/data/auth.json');
-        Object.assign(this.config, this.auth);
+        Object.assign(this.config.github, this.auth);
     }
 
     get log() {

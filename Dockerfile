@@ -1,4 +1,5 @@
 FROM node:current-alpine
+RUN apk --no-cache add git
 
 WORKDIR /app
 

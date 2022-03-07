@@ -31,13 +31,18 @@
                 },
                 "ENM-G3": {
                     "repos": []
+                },
+                "jonohas-mct": {
+                    "repos": ["MQTT-Python", "eindherhaling"]
                 }
             },
             "repos": []
         },
     
         "orgPrefix": "_org_",
-        "workingDirectory": "Github"
+        "usrPrefix": "_usr_",
+        "workingDirectory": "Github",
+        "username": "Jonohas"
     }
 
 }

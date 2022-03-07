@@ -4,6 +4,8 @@ services:
     container_name: morningsausage
     build: .
     init: true
+    env_file:
+      - ./.env
     ports:
       - 80:8080
     restart: on-failure:3
@@ -11,3 +13,4 @@ services:
       - ./frontend:/app/frontend
       - ./data:/app/data
       - ./log:/app/log
+      - ${HOST_GITHUB_FOLDER}:/app/Github
