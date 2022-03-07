@@ -21,7 +21,23 @@
     },
 
     "github": {
-        
+        "ignore": {
+            "orgs": {
+                "Damon-Org": {
+                    "repos": []
+                },
+                "zjeffer-mct": {
+                    "repos": []
+                },
+                "ENM-G3": {
+                    "repos": []
+                }
+            },
+            "repos": []
+        },
+    
+        "orgPrefix": "_org_",
+        "workingDirectory": "Github"
     }
 
 }
