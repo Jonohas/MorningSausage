@@ -1,77 +1,103 @@
-import http from 'http';
-import { EventEmitter } from 'events';
+import EventEmitter from 'events';
+import http, { Server } from 'http';
 import { ModuleBuilder } from 'waffle-manager';
-import Request from './web/Request.js';
+import { Logger } from '@/src/util/Logger.js';
+import { HTTPRequest } from './structures/HTTPRequest.js';
+import Constants, { DefaultResponseHeaders, DefaultAllowedHeaders, DefaultAllowedMethods, SortFunction, WebServerConfig } from './util/Constants.js';
 
+export const ModuleConstants = Constants;
 
-const name = 'webserver';
+export const ModuleInfo = new ModuleBuilder('webServer');
 
-export const ModuleInfo = new ModuleBuilder(name);
-
-export const ModuleInstance = class extends EventEmitter {
-
+export const ModuleInstance = class WebServer extends EventEmitter {
     constructor(main) {
         super();
 
-        this.config = main.config.webserver;
-        this._ = http.createServer();
-        this.log = main.log;
+        this._defaultHeaders = {};
+        this._handlers = [];
+        this._config = WebServerConfig;
+        this._s = new Server();
+
+        this.additional_config = main.config.web_server;
     }
 
-    getHeaders(req) {
-        return {
-            'Access-Control-Allow-Credentials': false,
-            'Access-Control-Allow-Headers': this.config.allow_headers.reduce(reduceFun, ''),
-            'Access-Control-Allow-Methods': this.config.allow_methods.reduce(reduceFun, ''),
-            'Access-Control-Allow-origin': this._matchOrigin(req.headers.origin)
-        }
+    get host() {
+        return this._config.host;
     }
 
-    _onRequest(req, res) {
-        this.emit('request', new Request(this, req, res));
+    get port() {
+        return this._config.port;
     }
 
-    _onError(err) {
-        this.emit('error', err);
-        this.log.error(name.toUpperCase(), `An error occured on "${request.url}":`, err);
+    /**
+     * Adds a request handler for the given path.
+     * @param {string} path The path to be handle by said path handler.
+     * @param {function} handler The callback to the function handling the request.
+     */
+    addPathHandler(path, handler) {
+        if (!path instanceof String)
+            throw new Error('Path is not of type String.');
+        if (typeof handler !== 'function')
+            throw new Error('Handler is not a function.');
+
+        this._handlers.push([path, handler]);
+        this._handlers.sort(SortFunction);
+
+        Logger.info('WEB_SERVER', `Registered new handler for path "${path}"`);
     }
 
-    _onListening() {
-        this.emit('ready');
-    }
-    
-    _handlePreflight(req, res) {
-        const method = req?.method.toLowerCase();
-
-        if (method === 'options') {
-            res.writeHead(204, this.getHeaders(req));
-            res.end();
-
-            return true;
-        }
-        return false;
+    buildHeaders() {
+        this._defaultHeaders['Access-Control-Allow-Headers'] = DefaultAllowedHeaders.join(',');
+        this._defaultHeaders['Access-Control-Allow-Methods'] = DefaultAllowedMethods.join(',');
+        this._defaultHeaders['Access-Control-Allow-Headers'] += `,${this.additional_config.allowed_headers.join(',')}`;
     }
 
-    _matchOrigin(origin) {
-        if (this.config.origins.includes(origin)) return origin;
-        return this.config.origins[0];
+    cleanup() {
+        this.close();
     }
 
-    //required for Modules.load() using waffle manager
-    async init() {
-        this.log.info(name.toUpperCase(), `Starting ${name}...`);
-        this._.on('request', this._onRequest.bind(this));
-        this._.on('error', this._onError.bind(this));
-        this._.on('listening', this._onListening.bind(this));
+    handlePreflight(req, res) {
+        if (req.method.toUpperCase() !== 'OPTIONS')
+            return false;
 
-        this._.listen(this.config.port);
+        
+        res.writeHead(204, this._defaultHeaders);
+        res.end();
 
         return true;
     }
 
-    //required for Modules.cleanup() using waffle manager
-    async cleanup() {}
+    init() {
+        this.buildHeaders();
 
-}
+        this._s.on('listening', this.onListening.bind(this));
+        this._s.on('request', this.onRequest.bind(this));
+        this._s.listen(this.port, this.host);
 
-const reduceFun = (accum, value) => accum !== '' ? accum += ',' + value : accum = value;
+        return true;
+    }
+
+    onListening() {
+        Logger.info("WEB_SERVER", `Server listening on: ${this.host}:${this.port}`);
+    }
+
+    /**
+     * "request" event handler
+     * @param {http.IncomingMessage} request
+     * @param {http.ServerResponse} response
+     */
+    async onRequest(request, response) {
+        if (this.handlePreflight(request, response))
+            return;
+        const httpRequest = new HTTPRequest(request, response);
+        for (const [ path, handler ] of this._handlers) {
+            if (httpRequest.path.startsWith(path)) {
+                await handler(httpRequest);
+
+                return;
+            }
+        }
+
+        response.end(`<pre>No handler registered for path: ${httpRequest.path}</pre>`);
+    }
+};

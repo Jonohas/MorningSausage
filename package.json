@@ -23,7 +23,10 @@
   },
   "homepage": "https://github.com/Jonohas/MorningSausage#readme",
   "dependencies": {
+    "@octokit/rest": "^18.12.0",
+    "github": "^14.0.0",
     "http": "^0.0.1-security",
+    "mime": "^3.0.0",
     "systeminformation": "^5.11.1",
     "waffle-manager": "^0.1.1",
     "yeelight-node": "^1.1.5"

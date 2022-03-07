@@ -8,5 +8,6 @@ services:
       - 80:8080
     restart: on-failure:3
     volumes:
+      - ./frontend:/app/frontend
       - ./data:/app/data
       - ./log:/app/log

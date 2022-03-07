@@ -1,4 +1,5 @@
 log/*
 !log/.gitkeep
+data/auth.json
 
 node_modules/

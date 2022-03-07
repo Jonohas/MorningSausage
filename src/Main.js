@@ -1,5 +1,5 @@
 import Modules from 'waffle-manager';
-import log from './util/Log.js'
+import { Logger } from './util/Logger.js'
 import { resolve } from 'path';
 import { loadJson } from '@/src/util/Util.js';
 
@@ -9,10 +9,12 @@ export default class Main {
 
 
         this.config = loadJson('/data/config.json'); // Path based on root of project
+        this.auth = loadJson('/data/auth.json');
+        Object.assign(this.config, this.auth);
     }
 
     get log() {
-        return log;
+        return Logger;
     }
 
     start() {
