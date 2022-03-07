@@ -9,29 +9,19 @@
         ]
     },
 
-    "webserver": {
+    "web_server": {
         "port": 8080,
 
-        "allow_headers": [
-            "Accept",
-            "Authorization",
-            "Access-Control-Allow-Headers",
-            "Origin",
-            "Content-Type",
-            "Access-Control-Request-Method",
-            "Access-Control-Request-Headers"
+        "allowed_headers": [
+            "Authorization"
         ],
-        "allow_methods": [
-            "DELETE",
-            "GET",
-            "HEAD",
-            "PATCH",
-            "POST",
-            "PUT"
-        ],
-        "origins": [
+        "allowed_origins": [
             "http://localhost:8080"
         ]
+    },
+
+    "github": {
+        
     }
 
 }
