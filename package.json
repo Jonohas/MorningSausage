@@ -29,7 +29,7 @@
     "mime": "^3.0.0",
     "node-run-cmd": "^1.0.1",
     "shelljs": "^0.8.5",
-    "systeminformation": "^5.11.1",
+    "systeminformation": "^5.21.7",
     "waffle-manager": "^0.1.1",
     "yeelight-node": "^1.1.5"
   }
